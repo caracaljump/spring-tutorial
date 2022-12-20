@@ -12,7 +12,7 @@
 	
 	<p style="color: red" th:if="${error != null}" th:text="${error}"></p>
 	
-	<form th:object="${reservationForm}" th:action="@{'/reservations/' + ${date} + '/' + ${roomId}}"　method="post">
+	<form th:action="@{'/reservations/' + ${date} + '/' + ${roomId}}" th:object="${reservationForm}" method="post">
 		会議室：<span th:text="${room.roomName}">豊洲</span>
 		<br>
 		予約者名：<span th:text="${user.lastName + ' ' + user.firstName}">山田 太郎</span>
@@ -30,7 +30,7 @@
 		</select>
 		<span th:if="${#fields.hasErrors('endTime')}" th:errors="*{endTime}" style="color:red">error!</span>
 		<br>
-		<button>予約</button>
+		<button type="submit">予約</button>
 	</form>
 	
 	<table>
