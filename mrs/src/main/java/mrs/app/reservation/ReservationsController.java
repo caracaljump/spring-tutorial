@@ -46,7 +46,7 @@ public class ReservationsController {
 		return form;
 	}
 
-	@GetMapping()
+	@GetMapping
 	String reserveForm(@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("date") LocalDate date,
 			@PathVariable("roomId") Integer roomId, Model model) {
 		ReservableRoomId reservableRoomId = new ReservableRoomId(roomId, date);
@@ -62,7 +62,7 @@ public class ReservationsController {
 		return "reservation/reserveForm";
 	}
 
-	@PostMapping()
+	@PostMapping
 	String reserve(@Validated ReservationForm form, BindingResult bindingResult,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("date") LocalDate date,
 			@PathVariable("roomId") Integer roomId, Model model) {
