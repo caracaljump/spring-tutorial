@@ -2,6 +2,7 @@ package mrs;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,13 +11,14 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import mrs.domain.service.user.ReservationUserDetailsService;
 
+@Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
 	@Autowired
 	ReservationUserDetailsService userDetailsService;
 
 	@Bean
-	PasswordEncoder passwordEncoder() {
+	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
@@ -26,7 +28,8 @@ public class WebSecurityConfig {
 				authz -> authz.antMatchers("/js/**", "/css/**").permitAll().antMatchers("/**").authenticated())
 				.formLogin(login -> login.loginPage("/loginForm").loginProcessingUrl("/login")
 						.usernameParameter("username").passwordParameter("password").defaultSuccessUrl("/rooms", true)
-						.failureUrl("/loginForm?error=true").permitAll());
+						.failureUrl("/loginForm?error=true").permitAll())
+				.logout(logout -> logout.logoutSuccessUrl("/"));
 		return http.build();
 	}
 }
