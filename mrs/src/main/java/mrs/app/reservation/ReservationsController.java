@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import mrs.domain.model.ReservableRoom;
 import mrs.domain.model.ReservableRoomId;
 import mrs.domain.model.Reservation;
-import mrs.domain.model.User;
 import mrs.domain.service.reservation.AlreadyReservedException;
 import mrs.domain.service.reservation.ReservationService;
 import mrs.domain.service.reservation.UnavailableReservationException;
@@ -93,12 +92,11 @@ public class ReservationsController {
 	}
 
 	@PostMapping(params = "cancel")
-	String cancel(@AuthenticationPrincipal ReservationUserDetails userDetails,
-			@RequestParam("reservationId") Integer reservationId, @PathVariable("roomId") Integer roomId,
+	String cancel(@RequestParam("reservationId") Integer reservationId, @PathVariable("roomId") Integer roomId,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @PathVariable("date") LocalDate date, Model model) {
-		User user = userDetails.getUser();
 		try {
-			reservationService.cancel(reservationId, user);
+			Reservation reservation = reservationService.findOne(reservationId);
+			reservationService.cancel(reservation);
 		} catch (AccessDeniedException e) {
 			model.addAttribute("error", e.getMessage());
 			return reserveForm(date, roomId, model);
