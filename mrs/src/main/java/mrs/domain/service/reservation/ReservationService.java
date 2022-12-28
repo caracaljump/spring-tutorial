@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,8 @@ public class ReservationService {
 	public Reservation reserve(Reservation reservation) {
 		ReservableRoomId reservableRoomId = reservation.getReservableRoom().getReservableRoomId();
 		// 対象の部屋の予約可否をチェック
-		ReservableRoom reservable = reservableRoomRepository.findById(reservableRoomId).get();
+		// 悲観ロック
+		ReservableRoom reservable = reservableRoomRepository.findOneForUpdateByReservableRoomId(reservableRoomId);
 		if (reservable == null) {
 			throw new UnavailableReservationException("入力の日付・部屋の組み合わせは予約できません。");
 		}
@@ -50,7 +52,7 @@ public class ReservationService {
 		Reservation reservation = reservationRepository.findById(reservationId).get();
 		if (RoleName.ADMIN != requestUser.getRoleName()
 				&& !Objects.equals(reservation.getUser().getUserId(), requestUser.getUserId())) {
-			throw new IllegalStateException("要求されたキャンセルは許可できません。");
+			throw new AccessDeniedException("要求されたキャンセルは許可できません。");
 		}
 		reservationRepository.delete(reservation);
 	}
