@@ -43,6 +43,14 @@ public class Reservation implements Serializable {
 		return target.endTime.isAfter(startTime) && endTime.isAfter(target.startTime);
 	}
 
+	public Integer getReservationId() {
+		return this.reservationId;
+	}
+
+	public void setReservationId(Integer reservationId) {
+		this.reservationId = reservationId;
+	}
+
 	public LocalTime getStartTime() {
 		return this.startTime;
 	}
