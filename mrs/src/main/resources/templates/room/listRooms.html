@@ -18,6 +18,9 @@
 				th:text="${room.meetingRoom.roomName}"></a>
 		</li>
 	</ul>
+	<form th:action="@{/logout}" method="post">
+		<button>ログアウト</button>
+	</form>
 </body>
 
 </html>
